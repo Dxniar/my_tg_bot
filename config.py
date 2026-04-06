@@ -79,7 +79,7 @@ class Settings:
     timezone: str
     webhook_base_url: str
     webhook_path: str
-    webhook_secret: str
+    webhook_secret: str | None
     webapp_host: str
     webapp_port: int
     event: EventConfig
@@ -107,7 +107,7 @@ def load_settings() -> Settings:
         timezone=os.getenv("TIMEZONE", "Europe/Moscow"),
         webhook_base_url=os.getenv("WEBHOOK_BASE_URL", "https://example.com"),
         webhook_path=webhook_path,
-        webhook_secret=os.getenv("WEBHOOK_SECRET", "change_me"),
+        webhook_secret=(os.getenv("WEBHOOK_SECRET", "").strip() or None),
         webapp_host=os.getenv("WEBAPP_HOST", "0.0.0.0"),
         webapp_port=int(os.getenv("WEBAPP_PORT", "8080")),
         event=EventConfig(),

@@ -40,7 +40,10 @@ async def main() -> None:
     dp.include_router(admin.router)
 
     webhook_url = f"{settings.webhook_base_url.rstrip('/')}{settings.webhook_path}"
-    await bot.set_webhook(url=webhook_url, secret_token=settings.webhook_secret, drop_pending_updates=False)
+    set_webhook_kwargs = {"url": webhook_url, "drop_pending_updates": False}
+    if settings.webhook_secret:
+        set_webhook_kwargs["secret_token"] = settings.webhook_secret
+    await bot.set_webhook(**set_webhook_kwargs)
 
     reminder_service.start()
     await reminder_service.schedule_for_all_registered_users()
@@ -60,6 +63,10 @@ async def main() -> None:
     await site.start()
 
     logging.info("Webhook установлен: %s", webhook_url)
+    if settings.webhook_secret:
+        logging.info("Проверка webhook secret включена")
+    else:
+        logging.warning("Проверка webhook secret отключена")
     logging.info("Webhook-сервер запущен на %s:%s", settings.webapp_host, settings.webapp_port)
 
     stop_event = asyncio.Event()

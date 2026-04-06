@@ -133,7 +133,7 @@ cp .env.example .env
 - `TIMEZONE` — таймзона (например, `Europe/Moscow`).
 - `WEBHOOK_BASE_URL` — публичный HTTPS URL (без пути), например `https://bot.company.ru`.
 - `WEBHOOK_PATH` — путь webhook, например `/telegram/webhook`.
-- `WEBHOOK_SECRET` — секрет для проверки заголовка `X-Telegram-Bot-Api-Secret-Token`.
+- `WEBHOOK_SECRET` — секрет для проверки заголовка `X-Telegram-Bot-Api-Secret-Token` (опционально, можно оставить пустым).
 - `WEBAPP_HOST` — хост локального HTTP-сервера бота.
 - `WEBAPP_PORT` — порт локального HTTP-сервера бота.
 
@@ -147,7 +147,7 @@ EVENT_DATETIME=2026-09-25 10:00
 TIMEZONE=Europe/Moscow
 WEBHOOK_BASE_URL=https://bot.company.ru
 WEBHOOK_PATH=/telegram/webhook
-WEBHOOK_SECRET=super_secret_token
+WEBHOOK_SECRET=
 WEBAPP_HOST=0.0.0.0
 WEBAPP_PORT=8080
 ```
@@ -284,6 +284,7 @@ curl "https://api.telegram.org/bot<YOUR_TOKEN>/getWebhookInfo"
 Решение:
 - Установить в Render переменную `PYTHON_VERSION=3.12.6`;
 - Перезапустить deploy (`Manual Deploy` -> `Clear build cache & deploy`).
+- Если видите `Wrong response from the webhook: 401 Unauthorized`, временно очистите `WEBHOOK_SECRET` в Render и сделайте redeploy — это отключит проверку secret и устранит проблему несовпадения заголовка.
 
 После перехода на Python 3.12 `aiogram`/`pydantic-core` устанавливаются из wheel без Rust toolchain.
 
