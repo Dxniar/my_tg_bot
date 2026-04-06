@@ -264,6 +264,31 @@ curl "https://api.telegram.org/bot<YOUR_TOKEN>/getWebhookInfo"
 
 ---
 
+## Render (free) — быстрый деплой
+
+1. Создайте Web Service из репозитория.
+2. В Render выберите **Free plan**.
+3. Build Command: `pip install -r requirements.txt`
+4. Start Command: `python bot.py`
+5. Установите переменные окружения из `.env.example` + `WEBAPP_PORT=10000`.
+6. Обязательно зафиксируйте версию Python **3.12.x** (не 3.14) через `PYTHON_VERSION=3.12.6` в Render.
+
+В репозитории добавлен `render.yaml` с готовой конфигурацией и `.python-version` для локальной синхронизации версии.
+
+---
+
+## Ошибка `pydantic-core` на Render (metadata-generation-failed)
+
+Если в логах есть попытка сборки `pydantic-core` через Rust/maturin и путь вида `python3.14`, причина обычно в том, что Render взял Python 3.14, для которого нет подходящего бинарного wheel.
+
+Решение:
+- Установить в Render переменную `PYTHON_VERSION=3.12.6`;
+- Перезапустить deploy (`Manual Deploy` -> `Clear build cache & deploy`).
+
+После перехода на Python 3.12 `aiogram`/`pydantic-core` устанавливаются из wheel без Rust toolchain.
+
+---
+
 ## Развёртывание на VPS (Ubuntu)
 
 1. Установить Python 3.12 и git.
